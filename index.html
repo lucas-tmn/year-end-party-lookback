@@ -49,8 +49,33 @@
     <h1 id="t"></h1>
     <p id="s"></p>
     <button id="go">Bắt đầu</button>
-    <small>Space: tạm dừng · ← / →: chuyển ảnh · F: toàn màn hình · M: nhạc · R: chiếu lại · T: thử hiệu ứng</small>
+    <small id="photoinfo" style="margin-top:1.4em"></small>
+    <small>Space: tạm dừng · ← / →: chuyển ảnh · F: toàn màn hình · M: nhạc · R: chiếu lại · T: thử hiệu ứng · I: nhập ảnh</small>
   </div>
+</div>
+
+<button id="setupbtn" title="Phím I">⚙ Nhập ảnh</button>
+
+<!-- Bảng nhập ảnh: chỉ dùng TRƯỚC khi chiếu, tự ẩn hẳn khi bấm Bắt đầu -->
+<div id="setup" class="hidden">
+  <div class="sbox">
+    <div class="shead"><h2>Nhập ảnh</h2><button id="sclose" class="ghost">Xong ✕</button></div>
+    <div class="sdrop">
+      <b>Kéo thả ảnh hoặc cả thư mục vào đây</b>
+      <span>hoặc</span>
+      <div class="srow"><button id="spick">Chọn ảnh…</button><button id="sdir" class="ghost">Chọn thư mục…</button></div>
+      <small>JPG, PNG, WebP. Ảnh được thu nhỏ và xoay đúng chiều ngay trên máy này.</small>
+    </div>
+    <div class="sbar">
+      <span id="scount"></span>
+      <label>Thứ tự: <select id="ssort"><option value="name">Theo tên file</option><option value="time">Theo thời gian file</option></select></label>
+      <button id="sclear" class="ghost danger">Xóa ảnh đã import</button>
+    </div>
+    <div id="smsg"></div>
+    <div id="sgrid"></div>
+  </div>
+  <input type="file" id="fileIn" accept="image/*" multiple hidden>
+  <input type="file" id="dirIn" webkitdirectory multiple hidden>
 </div>
 
 <div id="bar"><i></i></div>
@@ -58,6 +83,7 @@
 <script src="config.js"></script>
 <script src="effects.js"></script>
 <script src="photos.js"></script>
+<script src="import.js"></script>
 <script src="ship.js"></script>
 <script src="app.js"></script>
 </body>

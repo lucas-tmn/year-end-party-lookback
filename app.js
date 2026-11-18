@@ -17,9 +17,45 @@
   const EFFECTS = window.EFFECTS || [];
   const byId = Object.fromEntries(EFFECTS.map((e) => [e.id, e]));
   const VISIBLE = EFFECTS.filter((e) => !e.hidden);
-  let photos = (window.PHOTOS || []).slice();
-  if (C.shuffle) photos.sort(() => Math.random() - 0.5);
-  const N = photos.length;
+  // Nguồn ảnh: ảnh đã import (import.js) > photos.js > ảnh nháp tự tạo
+  const DRAFT_COUNT = 30;
+  function makeDrafts(n) {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const portrait = i % 6 === 4;
+      const w = portrait ? 1000 : 1500, h = portrait ? 1500 : 1000;
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      const g = c.getContext("2d");
+      const hue = (i * 37) % 360;
+      const gr = g.createLinearGradient(0, 0, w, h);
+      gr.addColorStop(0, `hsl(${hue},55%,52%)`); gr.addColorStop(1, `hsl(${(hue + 50) % 360},60%,28%)`);
+      g.fillStyle = gr; g.fillRect(0, 0, w, h);
+      g.fillStyle = "rgba(255,255,255,.12)";
+      for (let k = 0; k < 6; k++) { g.beginPath(); g.arc(((i * 211 + k * 397) % w), ((i * 131 + k * 263) % h), 60 + ((k * 53 + i * 17) % 160), 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+      g.font = `700 ${Math.round(h * 0.22)}px sans-serif`; g.fillText(String(i + 1).padStart(2, "0"), w / 2, h * 0.47);
+      g.font = `500 ${Math.round(h * 0.05)}px sans-serif`; g.fillStyle = "rgba(255,255,255,.8)"; g.fillText("ẢNH NHÁP", w / 2, h * 0.68);
+      const url = c.toDataURL("image/jpeg", 0.8);
+      out.push({ src: url, thumb: url });
+    }
+    return out;
+  }
+  const filePhotos = (window.PHOTOS || []).slice();
+  let photos = [], N = 0, photoKind = "draft";
+  let defaultSet = null;
+  function setPhotos(list, kind) {
+    photos = list.slice();
+    if (C.shuffle) photos.sort(() => Math.random() - 0.5);
+    N = photos.length;
+    photoKind = kind;
+    holder.clear(); prefetched = false; pending = null; cur = -1; phase = "idle";
+    mosaic.innerHTML = "";
+    if (window.Ship) Ship.init({ n: N });
+    const sec = Math.round(N * C.secondsPerPhoto);
+    $("#photoinfo").textContent = (kind === "import" ? `${N} ảnh đã import` : kind === "file" ? `${N} ảnh (photos.js)` : `${N} ảnh nháp, chưa import ảnh thật`) + ` · khoảng ${sec} giây`;
+    $("#photoinfo").classList.toggle("draft", kind === "draft");
+  }
 
   const $ = (s) => document.querySelector(s);
   const canvas = $("#gl"), bar = $("#bar i"), chapter = $("#chapter");
@@ -43,8 +79,6 @@
     $("#s").textContent = msg;
     $("#go").style.display = "none";
   }
-  if (!N) { fail("Chưa có ảnh. Chạy prepare_photos.py để tạo photos.js."); return; }
-
   const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false, preserveDrawingBuffer: true });
   if (!gl) { fail("Trình duyệt không hỗ trợ WebGL. Hãy dùng Chrome hoặc Edge bản mới."); return; }
 
@@ -416,8 +450,10 @@ float easeIO(float t){ return t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2
   async function keepAwake() { try { if (navigator.wakeLock) await navigator.wakeLock.request("screen"); } catch (e) {} }
 
   async function start() {
-    if (running) return;
+    if (running || !N) return;
     running = true;
+    document.body.classList.add("playing");   // ẩn hẳn nút/bảng nhập ảnh khỏi màn hình chiếu
+    if (window.PhotoImport) PhotoImport.close();
     setupAudio();
     if (audio) audio.play().then(() => fadeAudio(C.musicVolume, 1500)).catch(() => {});
     keepAwake();
@@ -495,7 +531,18 @@ float easeIO(float t){ return t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2
     unlock() { previewLock = false; },
     effects: () => VISIBLE.map((e) => e.id)
   };
-  if (window.Ship) Ship.init({ n: N, accent: C.brand.accent, ship: C.brand.ship });
+  if (window.Ship) Ship.init({ accent: C.brand.accent, ship: C.brand.ship });
+
+  // Nguồn ảnh mặc định (photos.js hoặc ảnh nháp) và bảng nhập ảnh (chỉ có trước khi chiếu)
+  defaultSet = filePhotos.length ? { list: filePhotos, kind: "file" } : { list: makeDrafts(DRAFT_COUNT), kind: "draft" };
+  setPhotos(defaultSet.list, defaultSet.kind);
+  if (window.PhotoImport) {
+    PhotoImport.init({
+      secondsPerPhoto: C.secondsPerPhoto,
+      isRunning: () => running,
+      onChange: (items) => { if (running) return; if (items) setPhotos(items, "import"); else setPhotos(defaultSet.list, defaultSet.kind); }
+    });
+  }
 
   requestAnimationFrame(frame);
 })();

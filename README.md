@@ -10,6 +10,7 @@ nền thương hiệu Ashley cố định, và phi thuyền cam bay dần tới 
 | `index.html`, `style.css` | Khung trang, lớp thương hiệu (nền, logo, slogan), màn hình bắt đầu/kết thúc |
 | `app.js` | Engine: WebGL, timeline, điều khiển, bảng thử hiệu ứng |
 | `effects.js` | Thư viện hiệu ứng: 14 shader GLSL (định dạng gl-transitions) |
+| `import.js` | Nhập ảnh thật bằng kéo thả / chọn file / chọn thư mục (chỉ ở màn hình bắt đầu) |
 | `ship.js` | Phi thuyền (ảnh `assets/ship.png`), đường đứt khúc chuyển động, đường bay, cổng đích và pháo hoa |
 | `assets/ship.png` | Hình phi thuyền thiết kế riêng, đã xoay ngang, nền trong suốt (thay file này để đổi tàu) |
 | `config.js` | Mọi thông số: nhịp chiếu, hiệu ứng, màu brand, slogan, nhạc |
@@ -31,6 +32,17 @@ Mỗi ảnh là một chấm; mỗi lần chuyển ảnh tàu bay tới chấm k
 khi tàu lao tới chúng dài ra và các đoạn chạy ra sau nhanh hơn, khi giữ ảnh chúng ngắn lại và trôi chậm.
 Tới ảnh cuối, tàu vào cổng "Next Level", slogan bừng sáng, pháo hoa nổ ra và các đường đứt khúc thưa dần.
 Chỉnh kích thước tàu bằng `shipWidth` trong `ship.js`, vị trí/màu/độ dài từng đường trong mảng `lanes`.
+
+## Nhập ảnh thật (trước giờ chiếu ~20 phút)
+
+Chưa có ảnh thì tool tự tạo 30 ảnh nháp để dựng và duyệt hiệu ứng. Khi có ảnh thật:
+1. Mở `index.html` (Chrome/Edge). Ở màn hình bắt đầu bấm **⚙ Nhập ảnh** (hoặc phím **I**), hoặc kéo thả thẳng ảnh/thư mục vào cửa sổ.
+2. Ảnh tự thu nhỏ (cạnh dài tối đa 2560px) và xoay đúng chiều theo EXIF ngay trên máy, không gửi đi đâu. Có thể thả nhiều lần, ảnh trùng tên được bỏ qua.
+3. Chọn thứ tự (theo tên file hoặc theo thời gian file), bấm ✕ trên ảnh để bỏ ảnh. Số ảnh thay đổi thì phi thuyền tự chia lại các chặng.
+4. Bấm **Xong**, rồi **Bắt đầu**. Bảng nhập ảnh và nút ⚙ ẩn hẳn khi đang chiếu (phím I và kéo thả cũng không còn tác dụng).
+
+Ảnh import được nhớ trong trình duyệt (IndexedDB), nên F5 không bị mất. Muốn quay về ảnh nháp: **Xóa ảnh đã import**.
+Ảnh HEIC (iPhone) Chrome chưa đọc được, hãy xuất sang JPG trước.
 
 ## Phím tắt
 
