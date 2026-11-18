@@ -9,8 +9,9 @@ nền thương hiệu Ashley cố định, và phi thuyền cam bay dần tới 
 |------|---------|
 | `index.html`, `style.css` | Khung trang, lớp thương hiệu (nền, logo, slogan), màn hình bắt đầu/kết thúc |
 | `app.js` | Engine: WebGL, timeline, điều khiển, bảng thử hiệu ứng |
-| `effects.js` | Thư viện hiệu ứng: 14 shader GLSL (định dạng gl-transitions) + hiệu ứng ghép mảnh (mesh) |
-| `ship.js` | Phi thuyền, lửa đẩy, đường bay, cổng đích và pháo hoa khi tới nơi |
+| `effects.js` | Thư viện hiệu ứng: 14 shader GLSL (định dạng gl-transitions) |
+| `ship.js` | Phi thuyền (ảnh `assets/ship.png`), đường đứt khúc chuyển động, đường bay, cổng đích và pháo hoa |
+| `assets/ship.png` | Hình phi thuyền thiết kế riêng, đã xoay ngang, nền trong suốt (thay file này để đổi tàu) |
 | `config.js` | Mọi thông số: nhịp chiếu, hiệu ứng, màu brand, slogan, nhạc |
 | `assets/logo.svg` | Logo **placeholder**, thay bằng logo Ashley chính thức |
 | `photos.js` | Danh sách ảnh (hiện là ảnh demo) |
@@ -25,15 +26,11 @@ nền thương hiệu Ashley cố định, và phi thuyền cam bay dần tới 
 
 ## Phi thuyền "Next Level"
 
-Phi thuyền (màu `brand.ship`) nằm trên đường bay ở dưới cùng. Mỗi ảnh là một chấm; mỗi lần chuyển ảnh
-phi thuyền bay tới chấm kế tiếp, lửa đẩy mạnh lên khi đang bay. Tới ảnh cuối, phi thuyền vào cổng
-"Next Level", slogan bừng sáng và pháo hoa nổ ra. Hình dạng hiện tại là tam giác tạm,
-sẽ chỉnh theo logo chính thức khi có file.
-
-## Hiệu ứng ghép mảnh ("Ghép mảnh Ashley")
-
-Ảnh mới được ghép từ các mảnh tam giác bay vào từ mọi hướng, xoay rồi khớp đúng vị trí, viền sáng mờ dần.
-Hiệu ứng này dài 1.1 giây (`durMs`); phần giữ ảnh trước đó tự rút ngắn nên tổng vẫn là 2 giây mỗi ảnh.
+Phi thuyền là hình thiết kế riêng (`assets/ship.png`, mũi hướng phải), bay ngang trên đường bay ở dưới cùng.
+Mỗi ảnh là một chấm; mỗi lần chuyển ảnh tàu bay tới chấm kế tiếp. Các đường đứt khúc phía sau tàu được vẽ bằng code:
+khi tàu lao tới chúng dài ra và các đoạn chạy ra sau nhanh hơn, khi giữ ảnh chúng ngắn lại và trôi chậm.
+Tới ảnh cuối, tàu vào cổng "Next Level", slogan bừng sáng, pháo hoa nổ ra và các đường đứt khúc thưa dần.
+Chỉnh kích thước tàu bằng `shipWidth` trong `ship.js`, vị trí/màu/độ dài từng đường trong mảng `lanes`.
 
 ## Phím tắt
 
@@ -42,7 +39,7 @@ Space: tạm dừng · ← / →: ảnh trước/sau · F: toàn màn hình · M
 ## Thêm hiệu ứng mới
 
 Hiệu ứng shader: thêm một mục vào `effects.js` với hàm `vec4 transition(vec2 uv)` (có thể dán từ
-gl-transitions.com, kiểm tra license từng shader). Hiệu ứng thiết kế riêng dạng mesh: xem mục `puzzle`.
+gl-transitions.com, kiểm tra license từng shader). 
 
 ## Chạy thử với ảnh demo
 

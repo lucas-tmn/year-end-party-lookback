@@ -8,3 +8,5 @@ thumbs/
 *.heic
 *.mp3
 __pycache__/
+!assets/*.png
+!assets/*.svg

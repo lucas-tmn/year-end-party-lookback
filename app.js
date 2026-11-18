@@ -148,64 +148,8 @@ float easeIO(float t){ return t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2
   }
   resizeCanvas();
 
-  // ---- mesh effects (ví dụ: ghép mảnh tam giác) ----
-  const meshes = new Map();
-  function meshFor(e) {
-    const ratio = canvas.width / canvas.height;
-    let M = meshes.get(e.id);
-    if (M && Math.abs(M.aspect - ratio) < 1e-3) return M;
-    if (!M) {
-      try {
-        const v = compile(gl.VERTEX_SHADER, e.mesh.vert), f = compile(gl.FRAGMENT_SHADER, e.mesh.frag);
-        const p = gl.createProgram();
-        gl.attachShader(p, v); gl.attachShader(p, f);
-        ["aPos", "aCen", "aRnd", "aBary"].forEach((n, i) => gl.bindAttribLocation(p, i, n));
-        gl.linkProgram(p);
-        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
-        const u = (n) => gl.getUniformLocation(p, n);
-        M = { p, buf: gl.createBuffer(), uTo: u("uTo"), progress: u("progress"), ratio: u("ratio"), zt: u("zt"), accent: u("accent") };
-      } catch (err) {
-        console.error("Mesh shader lỗi [" + e.id + "]:", err.message);
-        meshes.set(e.id, null);
-        return null;
-      }
-    }
-    const data = e.mesh.build(ratio);
-    gl.bindBuffer(gl.ARRAY_BUFFER, M.buf);
-    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-    M.count = data.length / 10; M.aspect = ratio;
-    meshes.set(e.id, M);
-    return M;
-  }
-
-  function renderMesh(e, fromTex, toTex, p, zf, zt) {
-    renderQuad(fromTex, toTex, e.mesh.bg, p, zf, zt);   // ảnh cũ mờ dần (đã xoá khung hình)
-    const M = meshFor(e);
-    if (!M) return;
-    gl.useProgram(M.p);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.bindBuffer(gl.ARRAY_BUFFER, M.buf);
-    const stride = 40;
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, stride, 0);
-    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, stride, 8);
-    gl.vertexAttribPointer(2, 3, gl.FLOAT, false, stride, 16);
-    gl.vertexAttribPointer(3, 3, gl.FLOAT, false, stride, 28);
-    gl.enableVertexAttribArray(1); gl.enableVertexAttribArray(2); gl.enableVertexAttribArray(3);
-    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, toTex); gl.uniform1i(M.uTo, 0);
-    gl.uniform1f(M.progress, p);
-    gl.uniform1f(M.ratio, canvas.width / canvas.height);
-    gl.uniform1f(M.zt, zt);
-    gl.uniform3f(M.accent, ACCENT[0], ACCENT[1], ACCENT[2]);
-    gl.drawArrays(gl.TRIANGLES, 0, M.count);
-    gl.disableVertexAttribArray(1); gl.disableVertexAttribArray(2); gl.disableVertexAttribArray(3);
-    gl.disable(gl.BLEND);
-  }
-
   function render(fromTex, toTex, effectId, p, zf, zt) {
-    const e = byId[effectId];
-    if (e && e.mesh) renderMesh(e, fromTex, toTex, p, zf, zt);
-    else renderQuad(fromTex, toTex, effectId, p, zf, zt);
+    renderQuad(fromTex, toTex, effectId, p, zf, zt);
   }
 
   function renderQuad(fromTex, toTex, effectId, p, zf, zt) {
