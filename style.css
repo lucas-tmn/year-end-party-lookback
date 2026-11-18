@@ -25,7 +25,11 @@ body.idle:not(.lab-open) { cursor: none; }
   color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.08);
   user-select: none;
 }
-#logo { position: absolute; left: 5vw; top: 3.4vh; height: 5.6vh; max-width: 40vw; object-fit: contain; }
+#head { position: absolute; left: 4.5vw; top: 3.2vh; display: flex; align-items: center; gap: 1.1vw; }
+#logo { height: 5.4vh; width: auto; display: block; }
+#title { font-size: clamp(14px, 2.5vh, 30px); letter-spacing: .14em; font-weight: 300; color: #fff; white-space: nowrap; }
+#title b { font-weight: 600; }
+#title i { font-style: normal; color: var(--accent); }
 #slogan {
   position: absolute; right: 3.5vw; bottom: 7.92vh; transform: translateY(50%); transform-origin: right center;
   text-align: right; white-space: nowrap;

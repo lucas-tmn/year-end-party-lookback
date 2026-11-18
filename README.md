@@ -13,7 +13,7 @@ nền thương hiệu Ashley cố định, và phi thuyền cam bay dần tới 
 | `ship.js` | Phi thuyền (ảnh `assets/ship.png`), đường đứt khúc chuyển động, đường bay, cổng đích và pháo hoa |
 | `assets/ship.png` | Hình phi thuyền thiết kế riêng, đã xoay ngang, nền trong suốt (thay file này để đổi tàu) |
 | `config.js` | Mọi thông số: nhịp chiếu, hiệu ứng, màu brand, slogan, nhạc |
-| `assets/logo.svg` | Logo **placeholder**, thay bằng logo Ashley chính thức |
+| `assets/logo.svg` | Logo Ashley (tam giác cam, vector) |
 | `photos.js` | Danh sách ảnh (hiện là ảnh demo) |
 | `prepare_photos.py` | Tạm thời: nén ảnh gốc và ghi `photos.js` (sẽ thay bằng import trong trình duyệt) |
 

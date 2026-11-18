@@ -12,7 +12,8 @@ window.CONFIG = {
   // ---- Hiệu ứng chuyển ảnh ----
   // Danh sách id hiệu ứng được dùng (để null = dùng tất cả). Nhấn phím T khi đang chiếu
   // để mở bảng thử hiệu ứng, chọn xong bấm "Copy config" rồi dán vào đây.
-  transitions: null,
+  // ĐÃ CHỐT (14 hiệu ứng, chạy lần lượt theo thứ tự này):
+  transitions: ["crossfade", "zoomthru", "ripple", "glitch", "pixelize", "swirl", "radial", "stairs", "tiles", "doors", "whip", "blinds", "lightleak", "burn"],
   transitionOrder: "cycle",   // "cycle" = lần lượt, "random" = ngẫu nhiên (không lặp liền kề)
   perPhoto: {},               // ép hiệu ứng cho ảnh cụ thể. Ví dụ: { 29: "radial" } (ảnh số 30)
 
@@ -21,7 +22,8 @@ window.CONFIG = {
 
   // ---- Thương hiệu (cố định trong suốt buổi chiếu) ----
   brand: {
-    logo: "assets/logo.svg",   // thay bằng file logo Ashley chính thức (SVG hoặc PNG nền trong suốt)
+    logo: "assets/logo.svg",   // logo Ashley (tam giác cam, vector)
+    title: ["ASHLEY", "Year End Party 2026"],   // dòng chữ cạnh logo
     slogan: "Next Level",
     color1: "#0b1530",         // màu nền (đậm)
     color2: "#17316b",         // màu nền (sáng hơn)

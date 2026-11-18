@@ -11,7 +11,7 @@
     closingTitle: "Cảm ơn mọi người", closingText: "",
     ...U,
     frame: { x: 0.07, top: 0.12, bottom: 0.12, radius: 18, ...(U.frame || {}) },
-    brand: { logo: "assets/logo.svg", slogan: "Next Level", color1: "#0b1530", color2: "#17316b", accent: "#f2b84b", ship: "#ff7a1a", ...(U.brand || {}) }
+    brand: { logo: "assets/logo.svg", title: ["ASHLEY", "Year End Party 2026"], slogan: "Next Level", color1: "#0b1530", color2: "#17316b", accent: "#f2b84b", ship: "#ff7a1a", ...(U.brand || {}) }
   };
 
   const EFFECTS = window.EFFECTS || [];
@@ -31,6 +31,7 @@
   root.setProperty("--c2", C.brand.color2);
   root.setProperty("--accent", C.brand.accent);
   $("#logo").src = C.brand.logo;
+  { const t = C.brand.title || []; $("#title").innerHTML = `<b>${t[0] || ""}</b>${t[1] ? " - <i>" + t[1] + "</i>" : ""}`; }
   $("#slogan").textContent = C.brand.slogan;
   $("#bigtext").textContent = C.brand.slogan;
   $("#t").textContent = C.title;
