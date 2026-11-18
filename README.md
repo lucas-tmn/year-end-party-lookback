@@ -54,7 +54,7 @@ python3 prepare_photos.py demo_src --sort name  # ghi photos.js
 ## Lưu ý
 
 - Repo public: không commit ảnh thật của buổi tiệc, và cân nhắc việc đưa logo Ashley chính thức vào repo
-  (hiện `assets/logo.svg` chỉ là placeholder).
+  (`assets/logo.svg` là logo Ashley, nếu không muốn để công khai thì thêm vào `.gitignore`).
 
 - Ảnh được nhúng vào `photos.js` vì Chrome không cho WebGL đọc ảnh rời từ `file://`.
   Chức năng import trong trình duyệt sẽ không cần bước này.
