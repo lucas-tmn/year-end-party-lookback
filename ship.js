@@ -7,7 +7,7 @@
   const ctx = cv.getContext("2d");
   const slogan = document.getElementById("slogan");
 
-  const cfg = { n: 30, accent: "#f2b84b", ship: "#ff7a1a", sprite: "assets/ship.png", shipWidth: 1.6 };
+  const cfg = { n: 30, accent: "#f2b84b", ship: "#ff7a1a", sprite: "assets/ship.png", shipWidth: 1.12 };
   let W = 0, H = 0, U = 0, dpr = 1;
   let s = 0, boost = 0, thrust = 0.3, reached = false, ringT = -1, arrive = 0;
   let last = performance.now(), clock = 0, emitAcc = 0;
@@ -24,16 +24,13 @@
   // ---- đường đứt khúc ----
   // dy: lệch so với trục tàu (đơn vị: chiều cao ảnh tàu); off: điểm bắt đầu lùi vào trong; c: màu; w: độ dày; pat: dãy (đoạn, hở) theo đơn vị U.
   const ORANGE = [255, 138, 31], GREY = [150, 154, 164], LIGHT = [228, 232, 240];
+  // 3 đường, mỗi đường nằm sau một ngọn lửa: trái (trên), giữa, phải (dưới). tip = đầu ngọn lửa trong ảnh tàu.
   const lanes = [
-    { dy: -0.6, off: 0.2, c: GREY, w: 0.034, len: 1.7, pat: [0.9, 0.14, 0.22, 0.12, 0.5, 0.2], ph: 0.0, v: 1.0, a: 0.85 },
-    { dy: -0.5, off: 0.16, c: ORANGE, w: 0.034, len: 1.3, pat: [0.45, 0.12, 0.3, 0.16, 0.18, 0.1, 0.4, 0.2], ph: 0.7, v: 1.15, a: 0.95 },
-    { dy: -0.36, off: 0.1, c: LIGHT, w: 0.03, len: 2.1, pat: [1.0, 0.18, 0.35, 0.14], ph: 0.3, v: 0.9, a: 0.5 },
-    { dy: -0.22, off: 0.02, c: ORANGE, w: 0.034, len: 1.5, pat: [0.6, 0.14, 0.16, 0.12, 0.35, 0.18], ph: 1.2, v: 1.3, a: 0.95 },
-    { dy: 0.22, off: 0.02, c: GREY, w: 0.034, len: 1.9, pat: [0.8, 0.16, 0.28, 0.12, 0.45, 0.2], ph: 0.5, v: 1.05, a: 0.85 },
-    { dy: 0.36, off: 0.1, c: ORANGE, w: 0.034, len: 1.4, pat: [0.5, 0.14, 0.2, 0.12, 0.32, 0.16], ph: 1.5, v: 1.25, a: 0.95 },
-    { dy: 0.5, off: 0.16, c: LIGHT, w: 0.03, len: 2.3, pat: [1.1, 0.2, 0.3, 0.15], ph: 0.9, v: 0.85, a: 0.5 },
-    { dy: 0.6, off: 0.2, c: ORANGE, w: 0.034, len: 1.2, pat: [0.4, 0.12, 0.25, 0.14, 0.15, 0.1, 0.35, 0.18], ph: 0.2, v: 1.1, a: 0.9 }
+    { tip: 0, c: ORANGE, w: 0.04, len: 1.5, pat: [0.6, 0.14, 0.18, 0.12, 0.4, 0.2], ph: 0.0, v: 1.1, a: 0.95 },
+    { tip: 1, c: GREY, w: 0.04, len: 2.0, pat: [0.9, 0.16, 0.3, 0.14, 0.5, 0.2], ph: 0.6, v: 1.0, a: 0.9 },
+    { tip: 2, c: ORANGE, w: 0.04, len: 1.5, pat: [0.5, 0.14, 0.22, 0.12, 0.36, 0.18], ph: 1.1, v: 1.2, a: 0.95 }
   ];
+
 
   const rnd = (a, b) => a + Math.random() * (b - a);
   function rgb(h) {
@@ -128,14 +125,14 @@
     // ---- đường bay mờ + chấm mốc cho từng ảnh ----
     ctx.save();
     ctx.strokeStyle = "rgba(255,255,255,.16)"; ctx.lineWidth = 2; ctx.setLineDash([6, 8]);
-    ctx.beginPath(); ctx.moveTo(g.startX - g.SW * 0.2, g.y); ctx.lineTo(g.goalX - g.R, g.y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(noseX + U * 0.1, g.y); ctx.lineTo(g.goalX - g.R, g.y); ctx.stroke();
     ctx.restore();
     const n = Math.max(1, cfg.n - 1);
     for (let i = 0; i < cfg.n; i++) {
       const x = g.startX + (cfg.n > 1 ? i / n : 1) * (g.goalX - g.startX);
-      const passed = (cfg.n > 1 ? i / n : 1) <= s + 1e-3;
+      if ((cfg.n > 1 ? i / n : 1) <= s + 1e-3) continue;   // đã bay qua: không vẽ lại
       ctx.beginPath(); ctx.arc(x, g.y, U * 0.03, 0, Math.PI * 2);
-      ctx.fillStyle = passed ? `rgba(${ac[0]},${ac[1]},${ac[2]},.95)` : "rgba(255,255,255,.28)";
+      ctx.fillStyle = "rgba(255,255,255,.28)";
       ctx.fill();
     }
 
@@ -155,8 +152,8 @@
     const lenK = 0.45 + 1.05 * thrust;          // lao tới thì kéo dài
     const alphaK = (0.55 + 0.45 * thrust) * (1 - 0.8 * arrive);
     for (const L of lanes) {
-      const x0 = left + g.SW * (0.02 + L.off * 0.35);
-      drawLane(L, x0, cy + L.dy * g.SH, phase, lenK, alphaK);
+      const t = SPR.tips[L.tip];
+      drawLane(L, left + t[0] * g.SW, cy + (t[1] - SPR.noseY) * g.SH, phase, lenK, alphaK);
     }
 
     // ---- tia lửa nhỏ bay ra từ đầu ngọn lửa (các chấm cam như trong thiết kế) ----
