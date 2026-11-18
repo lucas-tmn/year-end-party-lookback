@@ -17,7 +17,7 @@ window.CONFIG = {
   perPhoto: {},               // ép hiệu ứng cho ảnh cụ thể. Ví dụ: { 29: "radial" } (ảnh số 30)
 
   // ---- Khung ảnh (tỉ lệ so với màn hình). Phần ngoài khung là nền thương hiệu ----
-  frame: { x: 0.07, top: 0.1, bottom: 0.15, radius: 18 },
+  frame: { x: 0.156, top: 0.175, bottom: 0.225, radius: 18 },
 
   // ---- Thương hiệu (cố định trong suốt buổi chiếu) ----
   brand: {

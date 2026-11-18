@@ -25,9 +25,9 @@ body.idle:not(.lab-open) { cursor: none; }
   color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.08);
   user-select: none;
 }
-#logo { position: absolute; left: 5vw; top: 3.4vh; height: 5.6vh; max-width: 24vw; object-fit: contain; }
+#logo { position: absolute; left: 5vw; top: 3.4vh; height: 5.6vh; max-width: 40vw; object-fit: contain; }
 #slogan {
-  position: absolute; right: 3.5vw; bottom: 5.8vh; transform: translateY(50%); transform-origin: right center;
+  position: absolute; right: 3.5vw; bottom: 7.92vh; transform: translateY(50%); transform-origin: right center;
   text-align: right; white-space: nowrap;
   font-size: clamp(14px, 1.6vw, 30px); font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
   transition: transform .7s cubic-bezier(.2,1.4,.4,1), filter .7s ease;
