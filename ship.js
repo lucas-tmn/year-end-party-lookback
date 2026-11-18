@@ -149,7 +149,7 @@
     ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(g.goalX, g.y, g.R * 1.8, 0, Math.PI * 2); ctx.fill();
 
     // ---- các đường đứt khúc phía sau tàu ----
-    const lenK = 0.45 + 1.05 * thrust;          // lao tới thì kéo dài
+    const lenK = 0.6 * (0.45 + 1.05 * thrust);          // lao tới thì kéo dài
     const alphaK = (0.55 + 0.45 * thrust) * (1 - 0.8 * arrive);
     for (const L of lanes) {
       const t = SPR.tips[L.tip];
