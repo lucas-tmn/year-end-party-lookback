@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Year End Party - Look Back</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Lớp thương hiệu cố định (nằm dưới ảnh) -->
+<div id="brand">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div id="bigtext"></div>
+  <img id="logo" alt="Ashley">
+  <div id="slogan"></div>
+</div>
+
+<!-- Lớp ảnh + hiệu ứng chuyển cảnh (WebGL, nền trong suốt) -->
+<canvas id="gl"></canvas>
+
+<!-- Đường bay phi thuyền (nằm trên ảnh, luôn hiện) -->
+<canvas id="ship"></canvas>
+
+<div id="chapter"></div>
+<div id="paused">❚❚</div>
+
+<div id="end">
+  <div id="mosaic"></div>
+  <div id="endtext"><h1></h1><p></p></div>
+</div>
+
+<!-- Bảng thử hiệu ứng (phím T) -->
+<div id="lab" class="hidden">
+  <h3>Hiệu ứng <small>T: đóng</small></h3>
+  <div id="fxlist"></div>
+  <label class="slow"><input type="checkbox" id="slow"> Chậm ×3 để xem kỹ</label>
+  <div class="row">
+    <button id="fxall">Chọn hết</button>
+    <button id="fxnone">Bỏ hết</button>
+    <button id="fxcopy">Copy config</button>
+  </div>
+  <small id="fxmsg"></small>
+</div>
+
+<div id="start">
+  <div class="box">
+    <h1 id="t"></h1>
+    <p id="s"></p>
+    <button id="go">Bắt đầu</button>
+    <small>Space: tạm dừng · ← / →: chuyển ảnh · F: toàn màn hình · M: nhạc · R: chiếu lại · T: thử hiệu ứng</small>
+  </div>
+</div>
+
+<div id="bar"><i></i></div>
+
+<script src="config.js"></script>
+<script src="effects.js"></script>
+<script src="photos.js"></script>
+<script src="ship.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

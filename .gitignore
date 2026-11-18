@@ -1,0 +1,10 @@
+# Ảnh thật của buổi tiệc: KHÔNG đưa lên repo public
+photos.js
+photos/
+thumbs/
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.mp3
+__pycache__/
